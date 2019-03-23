@@ -3,7 +3,7 @@ param (
 	[string]$TagVersionNumber
 )
 
-& dotnet restore --no-cache
+& msbuild /t:restore JiraServiceDesk.Net.csproj
 
 foreach ($src in ls $PSScriptRoot\..\src/*) {
     Push-Location $src
