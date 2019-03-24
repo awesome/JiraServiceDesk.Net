@@ -12,13 +12,13 @@ foreach ($src in ls $PSScriptRoot\..\src/*) {
 
     if ($TagVersionNumber -ne $null) {
         $PackageVersion = $TagVersionNumber
+        Write-Output "TagVersionNumber: $TagVersionNumber"
     }
     else {
         $PackageVersion = $BuildVersionNumber
+        Write-Output "BuildVersionNumber: $BuildVersionNumber"
     }
 
-    Write-Output "TagVersionNumber: $TagVersionNumber"
-    Write-Output "BuildVersionNumber: $BuildVersionNumber"
     Write-Output "PackageVersion: $PackageVersion"
 
     & dotnet build -c Release
