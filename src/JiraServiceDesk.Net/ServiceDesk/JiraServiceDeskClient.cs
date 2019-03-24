@@ -3,10 +3,12 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl.Http;
+using Flurl.Http.Content;
 using JiraServiceDesk.Net.Models.Common;
 using JiraServiceDesk.Net.Models.Organization;
 using JiraServiceDesk.Net.Models.ServiceDesk;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace JiraServiceDesk.Net
 {
@@ -51,6 +53,28 @@ namespace JiraServiceDesk.Net
 
             return await HandleResponseAsync<IEnumerable<TemporaryAttachment>>(response, s => JsonConvert.DeserializeObject<TemporaryAttachmentsResult>(s).TemporaryAttachments).ConfigureAwait(false);
         }
+        // dev references for IFormFile and CapturedMultipartContent:
+        // https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.http.iformfile?view=aspnetcore-2.2
+        // https://github.com/tmenier/Flurl/issues/113
+        // https://stackoverflow.com/questions/50340234/sending-rest-request-with-files-and-json-restsharp-on-framework-and-standard#50374486
+        public async Task<IEnumerable<TemporaryAttachment>> AttachTemporaryFileToServiceDeskAsync(string serviceDeskId, IList<IFormFile> files)
+        {
+            var content = new CapturedMultipartContent();
+
+            foreach (var file in files)
+            {
+                if (file.Length > 0)
+                {   
+                    content.AddFile(file.Name, file.OpenReadStream(), file.FileName);
+                }
+            }
+            
+            var response = await GetServiceDeskUrl(serviceDeskId)
+                .SendAsync(HttpMethod.Post, content)
+                .ConfigureAwait(false);
+
+            return await HandleResponseAsync<IEnumerable<TemporaryAttachment>>(response, s => JsonConvert.DeserializeObject<TemporaryAttachmentsResult>(s).TemporaryAttachments).ConfigureAwait(false);
+        } 
 
         public async Task<PagedResults<User>> AddCustomersToServiceDeskAsync(string serviceDeskId, IEnumerable<string> userNames)
         {
