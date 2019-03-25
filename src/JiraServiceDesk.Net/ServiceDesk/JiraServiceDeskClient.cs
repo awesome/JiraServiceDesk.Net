@@ -70,6 +70,7 @@ namespace JiraServiceDesk.Net
             }
             
             var response = await GetServiceDeskUrl(serviceDeskId)
+                .AppendPathSegment("/attachTemporaryFile")
                 .SendAsync(HttpMethod.Post, content)
                 .ConfigureAwait(false);
 
