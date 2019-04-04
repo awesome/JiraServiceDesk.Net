@@ -4,6 +4,8 @@ namespace JiraServiceDesk.Net.Models.Customer
 {
     public class Customer : WithLinks
     {
+        
+        public string AccountId { get; set; }
         public string Name { get; set; }
         public string Key { get; set; }
         public string EmailAddress { get; set; }
