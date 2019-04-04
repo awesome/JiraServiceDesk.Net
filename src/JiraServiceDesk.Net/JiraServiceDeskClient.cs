@@ -34,6 +34,13 @@ namespace JiraServiceDesk.Net
             .WithHeader("X-ExperimentalApi", true)
             .ConfigureRequest(settings => settings.JsonSerializer = s_serializer);
 
+        private IFlurlRequest GetBaseUrlJira() => new Url(_url)
+            .AppendPathSegment("/rest/api/3")
+            .WithBasicAuth(_userName, _password)
+            .WithHeader("X-Atlassian-Token", "nocheck")
+            .WithHeader("X-ExperimentalApi", true)
+            .ConfigureRequest(settings => settings.JsonSerializer = s_serializer);
+
         private async Task<TResult> ReadResponseContentAsync<TResult>(HttpResponseMessage responseMessage, Func<string, TResult> contentHandler = null)
         {
             string content = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);

@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Flurl.Http;
 using JiraServiceDesk.Net.Models.Customer;
+using JiraServiceDesk.Net.Models.Customer.Mappers;
 
 namespace JiraServiceDesk.Net
 {
@@ -8,6 +10,9 @@ namespace JiraServiceDesk.Net
     {
         private IFlurlRequest GetCustomerUrl() => GetBaseUrl()
             .AppendPathSegment("/customer");
+
+        private IFlurlRequest GetGlobalUserSearchUrl() => GetBaseUrlJira()
+            .AppendPathSegment("/user/search");
 
         public async Task<Customer> CreateCustomerAsync(string email, string fullName)
         {
@@ -22,6 +27,29 @@ namespace JiraServiceDesk.Net
                 .ConfigureAwait(false);
 
             return await HandleResponseAsync<Customer>(response).ConfigureAwait(false);
+        }
+
+        public async Task<GlobalUserResponse> GetGlobalUserAsync(string emailString)
+        {
+            return await GetGlobalUserSearchUrl()
+                .SetQueryParams(new {email = emailString})
+                .GetJsonAsync<GlobalUserResponse>()
+                .ConfigureAwait(false);
+        }
+        
+        public async Task<GlobalUser> FindOrCreateGlobalUser(string emailString, string displayName)
+        {
+            var globalUserResponse = await GetGlobalUserAsync(emailString);
+            if (globalUserResponse.Data.Count > 0)
+            {
+                return globalUserResponse.Data.First();
+            }
+            else
+            {
+                var customer = await CreateCustomerAsync(emailString, displayName);
+                return GlobalUserMapper.MapIt(customer);
+            }
+
         }
     }
 }
