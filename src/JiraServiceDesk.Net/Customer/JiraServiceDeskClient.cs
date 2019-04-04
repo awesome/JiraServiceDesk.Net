@@ -32,7 +32,7 @@ namespace JiraServiceDesk.Net
         public async Task<GlobalUserResponse> GetGlobalUserAsync(string emailString)
         {
             return await GetGlobalUserSearchUrl()
-                .SetQueryParams(new {email = emailString})
+                .SetQueryParams(new {username = emailString})
                 .GetJsonAsync<GlobalUserResponse>()
                 .ConfigureAwait(false);
         }
