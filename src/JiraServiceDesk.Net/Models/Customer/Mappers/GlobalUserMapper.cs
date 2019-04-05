@@ -1,6 +1,6 @@
 namespace JiraServiceDesk.Net.Models.Customer.Mappers
 {
-    public class GlobalUserMapper
+    public static class GlobalUserMapper
     {
         public static GlobalUser MapIt(Customer customer)
         {
