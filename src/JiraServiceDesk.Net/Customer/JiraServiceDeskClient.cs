@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Flurl.Http;
 using JiraServiceDesk.Net.Models.Customer;
@@ -29,27 +30,33 @@ namespace JiraServiceDesk.Net
             return await HandleResponseAsync<Customer>(response).ConfigureAwait(false);
         }
 
-        public async Task<GlobalUserResponse> GetGlobalUserAsync(string emailString)
+        // dev notes:
+        // https://stackoverflow.com/questions/38752168/parsing-from-json-to-object-using-flurl#38752253
+        // issues with GetJsonAsync() for empty type wrapper https://github.com/tmenier/Flurl/issues/288
+        // instead using GetJsonListAsync() or ReceiveJson()
+        // https://stackoverflow.com/questions/52843606/web-api-call-returns-json-data-with-empty-fields/52856465#52856465
+        // https://stackoverflow.com/questions/44566204/flurl-mapping-property-names
+        public async Task<IList<GlobalUser>> GetGlobalUserAsync(string emailString)
         {
             return await GetGlobalUserSearchUrl()
                 .SetQueryParams(new {username = emailString})
-                .GetJsonAsync<GlobalUserResponse>()
+                .GetAsync()
+                .ReceiveJson<IList<GlobalUser>>()
                 .ConfigureAwait(false);
         }
         
         public async Task<GlobalUser> FindOrCreateGlobalUser(string emailString, string displayName)
         {
-            var globalUserResponse = await GetGlobalUserAsync(emailString);
-            if (globalUserResponse.Data.Count > 0)
+            var list = await GetGlobalUserAsync(emailString);
+            if (list.Count > 0)
             {
-                return globalUserResponse.Data.First();
+                return list.First();
             }
             else
             {
                 var customer = await CreateCustomerAsync(emailString, displayName);
                 return GlobalUserMapper.MapIt(customer);
             }
-
         }
     }
 }
