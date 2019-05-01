@@ -7,6 +7,6 @@ namespace JiraServiceDesk.Net.Models.Request
     {
         public string Summary { get; set; }
         public string Description { get; set; }
-        public IEnumerable<string> Attachments { get; set; }
+        public IEnumerable<string> Attachment { get; set; }
     }
 }
