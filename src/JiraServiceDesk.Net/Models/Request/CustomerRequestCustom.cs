@@ -7,7 +7,7 @@ namespace JiraServiceDesk.Net.Models.Request
     {
         public string ServiceDeskId { get; set; }
         public string RequestTypeId { get; set; }
-        public RequestFieldValuesCustom RequestFieldValuesCustom { get; set; }
+        public RequestFieldValuesCustom RequestFieldValues { get; set; }
         public string RaiseOnBehalfOf { get; set; }
         public List<string> RequestParticipants { get; set; }
     }
