@@ -32,6 +32,15 @@ namespace JiraServiceDesk.Net
 
             return await HandleResponseAsync<CustomerRequestResult>(response).ConfigureAwait(false);
         }
+        
+        public async Task<CustomerRequestResult> CreateCustomerRequestCustomAsync(CustomerRequestCustomTest customerRequestCustom)
+        {
+            var response = await GetRequestUrl()
+                .PostJsonAsync(customerRequestCustom)
+                .ConfigureAwait(false);
+
+            return await HandleResponseAsync<CustomerRequestResult>(response).ConfigureAwait(false);
+        }
 
         public async Task<IEnumerable<CustomerRequestResult>> GetCustomerRequestsAsync(string searchTerm = null,
             RequestOwnership? requestOwnership = null,
