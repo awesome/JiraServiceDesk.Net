@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 
 namespace JiraServiceDesk.Net.Models.Request
 {
@@ -9,16 +9,48 @@ namespace JiraServiceDesk.Net.Models.Request
     // https://developer.atlassian.com/cloud/jira/service-desk/rest/#fieldformats
     public class RequestFieldValuesCustom : RequestFieldValues
     {
+        // AppName
+        [JsonProperty("customfield_12430")]
         public string Customfield12430 { get; set; }
+        
+        // AppVersion
+        [JsonProperty("customfield_12431")]
         public string Customfield12431 { get; set; }
+        
+        // ClubId
+        [JsonProperty("customfield_12424")]
         public string Customfield12424 { get; set; }
+        
+        // DeviceModel
+        [JsonProperty("customfield_12434")]
         public string Customfield12434 { get; set; }
+        
+        // Keyfob
+        [JsonProperty("customfield_12803")]
         public string Customfield12803 { get; set; }
+        
+        // OsName
+        [JsonProperty("customfield_12432")]
         public string Customfield12432 { get; set; }
+        
+        // OsVersion
+        [JsonProperty("customfield_12433")]
         public string Customfield12433 { get; set; }
+        
+        // UserId
+        [JsonProperty("customfield_12437")]
         public string Customfield12437 { get; set; }
+        
+        // Country
+        [JsonProperty("customfield_12427")]
         public RequestFieldValuesCustomNestedId Customfield12427 { get; set; }
+        
+        // AppType
+        [JsonProperty("customfield_12421")]
         public RequestFieldValuesCustomNestedId Customfield12421 { get; set; }
+        
+        // UserType
+        [JsonProperty("customfield_12423")]
         public RequestFieldValuesCustomNestedId Customfield12423 { get; set; }
     }
 }
