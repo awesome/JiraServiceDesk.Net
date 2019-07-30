@@ -52,5 +52,18 @@ namespace JiraServiceDesk.Net.Models.Request
         // UserType
         [JsonProperty("customfield_12423")]
         public RequestFieldValuesCustomNestedId Customfield12423 { get; set; }
+        
+        //
+        // AFW CustomFields; https://jira.sebrands.com/browse/COACH-2004
+        //
+        // AccessLevel
+        [JsonProperty("customfield_12820")]
+        public string Customfield12820 { get; set; }
+        // PlName
+        [JsonProperty("customfield_12818")]
+        public string Customfield12818 { get; set; }
+        // PlUrl
+        [JsonProperty("customfield_12819")]
+        public string Customfield12819 { get; set; }
     }
 }
