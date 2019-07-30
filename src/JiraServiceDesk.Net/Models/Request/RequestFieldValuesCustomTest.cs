@@ -52,5 +52,18 @@ namespace JiraServiceDesk.Net.Models.Request
         // Country
         [JsonProperty("customfield_10039")]
         public RequestFieldValuesCustomNestedId Customfield10039 { get; set; }
+        
+        //
+        // AFW CustomFields; https://jira.sebrands.com/browse/COACH-2004
+        //
+        // AccessLevel
+        [JsonProperty("customfield_10047")]
+        public string Customfield10047 { get; set; }
+        // PlName
+        [JsonProperty("customfield_10048")]
+        public string Customfield10048 { get; set; }
+        // PlUrl
+        [JsonProperty("customfield_10049")]
+        public string Customfield10049 { get; set; }
     }
 }
