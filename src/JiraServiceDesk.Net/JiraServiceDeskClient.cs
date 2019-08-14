@@ -35,7 +35,7 @@ namespace JiraServiceDesk.Net
             .ConfigureRequest(settings => settings.JsonSerializer = s_serializer);
 
         private IFlurlRequest GetBaseUrlJira() => new Url(_url)
-            .AppendPathSegment("/rest/api/3")
+            .AppendPathSegment("/rest/api/2")
             .WithBasicAuth(_userName, _password)
             .WithHeader("X-Atlassian-Token", "nocheck")
             .WithHeader("X-ExperimentalApi", true)
