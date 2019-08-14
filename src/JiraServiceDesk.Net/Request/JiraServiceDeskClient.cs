@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Flurl.Http;
 using JiraServiceDesk.Net.Models.Common;
 using JiraServiceDesk.Net.Models.Request;
+using JiraServiceDesk.Net.Models.Request.Mappers;
+using Newtonsoft.Json;
 
 namespace JiraServiceDesk.Net
 {
@@ -120,7 +123,7 @@ namespace JiraServiceDesk.Net
             return await HandleResponseAsync(response).ConfigureAwait(false);
         }
 
-        public async Task<AttachmentsResult> CreateRequestAttachmentAsync(string issueIdOrKey, 
+        public async Task<AttachmentCreateResultDTO> CreateRequestAttachmentAsync(string issueIdOrKey, 
             IEnumerable<string> attachmentIds, bool isPublic, string additionalComment = null)
         {
             var data = new
@@ -136,8 +139,24 @@ namespace JiraServiceDesk.Net
             var response = await GetRequestUrl($"/{issueIdOrKey}/attachment")
                 .PostJsonAsync(data)
                 .ConfigureAwait(false);
-
-            return await HandleResponseAsync<AttachmentsResult>(response).ConfigureAwait(false);
+            
+            var content = await response.Content.ReadAsStringAsync();
+            var match = Regex.Match(content, @"isLastPage");
+            if (match.Success)
+            {
+                // response is declared class: "AttachmentCreateResultDTO"
+                // https://developer.atlassian.com/cloud/jira/service-desk/rest/#api-rest-servicedeskapi-request-issueIdOrKey-attachment-post
+                // https://docs.atlassian.com/jira-servicedesk/4.2.0/com/atlassian/servicedesk/api/rest/dto/domain/attachment/AttachmentCreateResultDTO.html
+                return await HandleResponseAsync<AttachmentCreateResultDTO>(response).ConfigureAwait(false);
+            }
+            else
+            {
+                // response is v3.16.1 "AttachmentResult"
+                // https://docs.atlassian.com/jira-servicedesk/REST/3.16.1/#servicedeskapi/request/{issueIdOrKey}/attachment 
+                // map to AttachmentCreateResultDTOMapper
+                var attachmentsResult = JsonConvert.DeserializeObject<JiraServiceDesk.Net.Models.Request.AttachmentsResult>(content);
+                return AttachmentCreateResultDTOMapper.MapIt(attachmentsResult);
+            }
         }
 
         public async Task<Comment> CreateRequestCommentAsync(string issueIdOrKey, string body, bool isPublic)

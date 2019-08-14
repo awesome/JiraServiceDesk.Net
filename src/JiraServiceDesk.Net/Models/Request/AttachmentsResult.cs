@@ -1,11 +1,12 @@
-﻿using JiraServiceDesk.Net.Models.Common;
+﻿using System.Collections.Generic;
 
 namespace JiraServiceDesk.Net.Models.Request
 {
-    // https://developer.atlassian.com/cloud/jira/service-desk/rest/#api-rest-servicedeskapi-request-issueIdOrKey-attachment-post
+    // "AttachmentResult" v3.16.1 response 
+    // https://docs.atlassian.com/jira-servicedesk/REST/3.16.1/#servicedeskapi/request/{issueIdOrKey}/attachment 
     public class AttachmentsResult
     {
         public Comment Comment { get; set; }
-        public PagedResults<Attachment> Attachments { get; set; }
+        public List<Attachment> Attachments { get; set; }
     }
 }
